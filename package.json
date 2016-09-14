@@ -23,7 +23,8 @@
     "sass-loader": "^1.0.3",
     "style-loader": "^0.12.3",
     "trim": "0.0.1",
-    "webpack": "^1.10.5"
+    "webpack": "^1.10.5",
+    "react-router": "^0.13.3"
   },
   "devDependencies": {
     "react-hot-loader": "^3.0.0-beta.3"

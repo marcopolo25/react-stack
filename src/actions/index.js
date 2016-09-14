@@ -14,8 +14,10 @@ firebase.initializeApp(config);
 class Actions {
     constructor(){
         this.generateActions(
+            'loadChannels',
             'channelsReceived',
             'channelsFailed',
+            'channelsLoading',
             'messagesReceived',
             'messagesFailed',
             'channelOpened',
@@ -27,7 +29,7 @@ class Actions {
         )
     }
 
-    login(args){
+    login(router){
         return (dispatch) => {
             var provider = new firebase.auth.GoogleAuthProvider();
             async.waterfall([
@@ -42,6 +44,7 @@ class Actions {
                 }
             ], function (err, user) {
                 dispatch(user);
+                router.transitionTo('/chat');
             });
 
         }

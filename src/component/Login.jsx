@@ -9,10 +9,14 @@ var {
 } = mui;
 
 class Login extends React.Component {
+
     onClick(){
-        Actions.login();
-        console.log('loggin in');
+        Actions.login(this.context.router);
     }
+
+    static contextTypes = {
+        router: React.PropTypes.func.isRequired
+    };
 
     render (){
         return (

@@ -3,20 +3,32 @@ import Channel from './Channel.jsx';
 import mui from 'material-ui';
 import connectToStores from 'alt/utils/connectToStores';
 import ChatStore from '../stores/ChatStore';
+import Actions from '../actions';
 
 var {Card, List, CircularProgress} = mui;
 
 @connectToStores
-class ChannelList extends React.Component{
+class ChannelList extends React.Component {
     constructor(props){
         super(props);
-        ChatStore.getChannels();
     }
 
-    static getStores()
-    {
-        return ChatStore;
+    componentDidMount(){
+        this.selectedChannel = this.props.params.channel;
+        ChatStore.getChannels(this.selectedChannel);
     }
+
+    componentWillReceiveProps(nextProps){
+        if(this.selectedChannel != nextProps.params.channel){
+            this.selectedChannel = nextProps.params.channel;
+            ChatStore.getChannels(this.selectedChannel);
+        }
+    }
+
+    static getStores(){
+        return [ChatStore];
+    }
+
     static getPropsFromStores(){
         return ChatStore.getState();
     }
@@ -24,29 +36,37 @@ class ChannelList extends React.Component{
     render(){
         if(!this.props.channels){
             return (
-              <Card style={{
-                  flexGrow: 1
-              }}>
-                <CircularProgress mode="indeterminate" innerStyle={{
-                    paddingTop: 20,
-                    paddingBottom: 20,
-                    margin: '0 auto',
-                    display: 'block',
-                    width: 60
-                }} />
-              </Card>
+                <Card style={{
+                    flexGrow: 1
+                }}>
+                    <CircularProgress
+                        mode="indeterminate"
+                        style={{
+                            paddingTop: '20px',
+                            paddingBottom: '20px',
+                            margin: '0 auto',
+                            display: 'block',
+                            width: '60px'
+                        }}
+                    />
+                </Card>
             );
         }
+
+
         var channelNodes = _(this.props.channels)
-        .map((channel)=> {
-            return (
-                <Channel channel={channel}/>
-            );
-        }).value();
+            .keys()
+            .map((k)=> {
+                let channel = this.props.channels[k];
+                return (
+                    <Channel channel={channel} />
+                );
+            })
+            .value();
 
         return (
             <Card style={{
-               flexGrow: 1
+                flexGrow: 1
             }}>
                 <List>
                     {channelNodes}
